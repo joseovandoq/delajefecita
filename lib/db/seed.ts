@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { db } from "./index";
 import { socios, productos, ubicaciones } from "./schema";
 
