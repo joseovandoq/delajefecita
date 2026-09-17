@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +41,7 @@ export function LoteForm({
   defaultValues?: LoteFormValues;
   submitLabel: string;
 }) {
-  const [state, formAction, isPending] = useActionState<ActionResult, FormData>(
+  const [state, formAction] = useFormState<ActionResult, FormData>(
     action,
     undefined
   );
@@ -134,9 +134,17 @@ export function LoteForm({
 
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
 
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Guardando…" : submitLabel}
-      </Button>
+      <SubmitButton label={submitLabel} />
     </form>
+  );
+}
+
+function SubmitButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? "Guardando…" : label}
+    </Button>
   );
 }
