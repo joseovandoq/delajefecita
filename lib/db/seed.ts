@@ -1,5 +1,5 @@
 import { db } from "./index";
-import { socios, productos, ubicaciones } from "./schema";
+import { socios, productos, ubicaciones, proveedores } from "./schema";
 
 async function seed() {
   await db
@@ -23,6 +23,11 @@ async function seed() {
   await db
     .insert(ubicaciones)
     .values([{ nombre: "Bodega casa" }, { nombre: "Refrigerador tienda" }])
+    .onConflictDoNothing();
+
+  await db
+    .insert(proveedores)
+    .values([{ nombre: "HEB" }, { nombre: "Plastikart" }, { nombre: "Papelería" }])
     .onConflictDoNothing();
 
   console.log("Seed completado.");

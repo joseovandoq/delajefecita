@@ -16,6 +16,9 @@ const geistMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "De La Jefecita",
   description: "Salsas artesanales hechas con cariño.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

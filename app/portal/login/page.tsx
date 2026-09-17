@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -22,8 +23,15 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
       <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>De La Jefecita</CardTitle>
+        <CardHeader className="items-center justify-items-center text-center">
+          <Image
+            src="/logo.png"
+            alt="De La Jefecita"
+            width={200}
+            height={200}
+            className="mb-2 w-28 rounded-xl"
+            priority
+          />
           <CardDescription>Acceso privado para socios del negocio.</CardDescription>
         </CardHeader>
         <CardContent>

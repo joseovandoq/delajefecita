@@ -27,9 +27,17 @@ export default async function LotesPage() {
             Cuándo y cuánta salsa se hizo, caducidad y ubicación.
           </p>
         </div>
-        <Link href="/portal/lotes/nuevo" className={cn(buttonVariants())}>
-          Registrar lote
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/portal/lotes/recetas"
+            className={cn(buttonVariants({ variant: "outline" }))}
+          >
+            Recetas
+          </Link>
+          <Link href="/portal/lotes/nuevo" className={cn(buttonVariants())}>
+            Registrar lote
+          </Link>
+        </div>
       </div>
 
       {data.length === 0 ? (
@@ -40,6 +48,7 @@ export default async function LotesPage() {
             <TableRow>
               <TableHead>Producto</TableHead>
               <TableHead>Cantidad</TableHead>
+              <TableHead>Disponible</TableHead>
               <TableHead>Producción</TableHead>
               <TableHead>Caducidad</TableHead>
               <TableHead>Ubicación</TableHead>
@@ -55,6 +64,9 @@ export default async function LotesPage() {
                 </TableCell>
                 <TableCell>
                   {lote.cantidad} {lote.unidad}
+                </TableCell>
+                <TableCell>
+                  {lote.cantidadDisponible} {lote.unidad}
                 </TableCell>
                 <TableCell>
                   {format(new Date(lote.fechaProduccion), "d MMM yyyy", { locale: es })}
