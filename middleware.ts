@@ -2,6 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  // La landing publica no necesita sesion: no gastar tiempo en Supabase.
+  if (!request.nextUrl.pathname.startsWith("/portal")) {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -25,9 +30,10 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims valida el JWT localmente (y refresca la sesion si caduco);
+  // getUser hacia un viaje de red a Supabase en cada clic.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims ?? null;
 
   const isPortalRoute = request.nextUrl.pathname.startsWith("/portal");
   const isLoginRoute = request.nextUrl.pathname.startsWith("/portal/login");
