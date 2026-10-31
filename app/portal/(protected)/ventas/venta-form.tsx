@@ -18,6 +18,7 @@ import { registrarVenta } from "./actions";
 
 type Lote = {
   id: string;
+  cantidadDisponible: string;
   fechaProduccion: string;
   producto: { nombre: string } | null;
 };
@@ -63,7 +64,8 @@ export function VentaForm({
             {lotes.map((lote) => (
               <SelectItem key={lote.id} value={lote.id}>
                 {lote.producto?.nombre ?? "—"} ·{" "}
-                {format(new Date(lote.fechaProduccion), "d MMM yyyy", { locale: es })}
+                {format(new Date(lote.fechaProduccion), "d MMM yyyy", { locale: es })} ·{" "}
+                {Number(lote.cantidadDisponible)} en bodega
               </SelectItem>
             ))}
           </SelectContent>
@@ -177,6 +179,20 @@ export function VentaForm({
           <Label htmlFor="fecha-venta">Fecha</Label>
           <Input id="fecha-venta" name="fecha" type="date" defaultValue={hoy} required />
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="metodoPago-venta">Forma de pago</Label>
+        <select
+          id="metodoPago-venta"
+          name="metodoPago"
+          defaultValue="efectivo"
+          className="h-9 rounded-md border bg-background px-3 text-sm"
+        >
+          <option value="efectivo">Efectivo</option>
+          <option value="transferencia">Transferencia</option>
+          <option value="terminal">Terminal</option>
+        </select>
       </div>
 
       <div className="flex flex-col gap-2">

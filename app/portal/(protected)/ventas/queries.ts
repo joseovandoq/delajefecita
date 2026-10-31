@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   puntosVenta,
@@ -59,7 +59,8 @@ export async function listarLotesParaVenta() {
     })
     .from(lotes)
     .leftJoin(productos, eq(lotes.productoId, productos.id))
-    .orderBy(desc(lotes.fechaProduccion))
+    // Primero los que todavia tienen existencia, y de esos el que caduca antes.
+    .orderBy(sql`(${lotes.cantidadDisponible} > 0) desc`, asc(lotes.fechaCaducidad))
     .limit(100);
 }
 
@@ -89,6 +90,7 @@ export async function listarVentas() {
       id: ventas.id,
       cantidad: ventas.cantidad,
       precioUnitario: ventas.precioUnitario,
+      metodoPago: ventas.metodoPago,
       fecha: ventas.fecha,
       notas: ventas.notas,
       producto: { nombre: productos.nombre },

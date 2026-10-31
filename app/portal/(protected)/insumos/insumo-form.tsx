@@ -72,6 +72,7 @@ export function InsumoForm({
           items={[
             { value: "ingrediente", label: "Ingrediente (va en la salsa)" },
             { value: "empaque", label: "Empaque (frascos, etiquetas…)" },
+            { value: "promocional", label: "Promocional (gorras, regalos…)" },
           ]}
           defaultValue={defaultValues?.categoria ?? "ingrediente"}
           onValueChange={(value) => setCategoria(value ?? "ingrediente")}
@@ -83,11 +84,13 @@ export function InsumoForm({
           <SelectContent>
             <SelectItem value="ingrediente">Ingrediente (va en la salsa)</SelectItem>
             <SelectItem value="empaque">Empaque (frascos, etiquetas…)</SelectItem>
+            <SelectItem value="promocional">Promocional (gorras, regalos…)</SelectItem>
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">
           Los ingredientes se descuentan solos al registrar un lote. El
-          empaque se descuenta a mano desde aquí, cuando de verdad se usa.
+          empaque se descuenta a mano desde aquí, cuando de verdad se usa. Los
+          promocionales no entran en recetas.
         </p>
       </div>
 
@@ -169,6 +172,15 @@ export function InsumoForm({
       </div>
 
       <div className="flex flex-col gap-2">
+        <Label htmlFor="proveedorNuevo">…o proveedor nuevo</Label>
+        <Input
+          id="proveedorNuevo"
+          name="proveedorNuevo"
+          placeholder="Escribe un nombre para crearlo (si lo llenas, se usa en lugar del de arriba)"
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
         <Label htmlFor="ubicacionId">Ubicación</Label>
         <Select
           name="ubicacionId"
@@ -186,6 +198,15 @@ export function InsumoForm({
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="ubicacionNueva">…o ubicación nueva</Label>
+        <Input
+          id="ubicacionNueva"
+          name="ubicacionNueva"
+          placeholder="Escribe un nombre para crearla (si lo llenas, se usa en lugar de la de arriba)"
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4">

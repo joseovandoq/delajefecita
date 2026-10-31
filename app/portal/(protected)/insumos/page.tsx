@@ -58,6 +58,8 @@ export default async function InsumosPage() {
                 <TableCell>
                   {insumo.categoria === "ingrediente" ? (
                     <Badge variant="secondary">Ingrediente</Badge>
+                  ) : insumo.categoria === "promocional" ? (
+                    <Badge variant="outline">Promocional</Badge>
                   ) : (
                     <div className="flex items-center gap-1.5">
                       <Badge variant="outline">Empaque</Badge>

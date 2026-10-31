@@ -12,6 +12,7 @@ type ActionResult = { error?: string } | undefined;
 
 const categoriaSchema = z.object({
   nombre: z.string().min(1, "Falta el nombre"),
+  base: z.enum(["produccion", "venta", "fondo", "otro"]).default("otro"),
   porcentaje: z.coerce.number().min(0).max(100),
 });
 
@@ -22,6 +23,7 @@ export async function crearCategoriaReparto(
   await requireSocio();
   const parsed = categoriaSchema.safeParse({
     nombre: formData.get("nombre"),
+    base: formData.get("base") || "otro",
     porcentaje: formData.get("porcentaje") || 0,
   });
 
@@ -33,6 +35,7 @@ export async function crearCategoriaReparto(
 
   await db.insert(categoriasReparto).values({
     nombre: data.nombre,
+    base: data.base,
     porcentaje: data.porcentaje.toString(),
   });
 

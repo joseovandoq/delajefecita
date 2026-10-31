@@ -4,11 +4,14 @@ import { requireSocio } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
 
 const MODULOS = [
+  { href: "/portal/resumen", label: "Resumen", activo: true },
+  { href: "/portal/venta-rapida", label: "Venta rápida", activo: true },
   { href: "/portal/lotes", label: "Lotes de producción", activo: true },
   { href: "/portal/insumos", label: "Insumos", activo: true },
   { href: "/portal/costos", label: "Costos", activo: true },
   { href: "/portal/ventas", label: "Ventas y puntos de venta", activo: true },
   { href: "/portal/eventos", label: "Eventos", activo: true },
+  { href: "/portal/gastos", label: "Gastos", activo: true },
   { href: "/portal/utilidades", label: "Utilidades y reparto", activo: true },
 ];
 

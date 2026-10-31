@@ -6,6 +6,7 @@ import {
   timestamp,
   numeric,
   date,
+  integer,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -34,6 +35,10 @@ export const productos = pgTable("productos", {
   // Precio de venta sugerido por unidad (frasco). Se usa en el modulo
   // de costos para calcular margen contra el costo de insumos.
   precioVenta: numeric("precio_venta", { precision: 10, scale: 2 }),
+  // Precio por unidad cuando se compran `mayoreoDesde` o mas (ej. 80 normal,
+  // 75 c/u desde 2). Nulo = sin precio de volumen.
+  precioMayoreo: numeric("precio_mayoreo", { precision: 10, scale: 2 }),
+  mayoreoDesde: integer("mayoreo_desde").notNull().default(2),
   activo: boolean("activo").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
@@ -290,6 +295,8 @@ export const ventas = pgTable("ventas", {
   clienteId: uuid("cliente_id").references(() => clientes.id),
   cantidad: numeric("cantidad", { precision: 10, scale: 2 }).notNull(),
   precioUnitario: numeric("precio_unitario", { precision: 10, scale: 2 }).notNull(),
+  // "efectivo" | "transferencia" | "terminal". Nulo en ventas viejas.
+  metodoPago: text("metodo_pago"),
   fecha: date("fecha").notNull(),
   notas: text("notas"),
   responsableId: uuid("responsable_id").references(() => socios.id),
@@ -345,8 +352,30 @@ export const costosEvento = pgTable("costos_evento", {
 export const categoriasReparto = pgTable("categorias_reparto", {
   id: uuid("id").defaultRandom().primaryKey(),
   nombre: text("nombre").notNull(),
+  // A quien se le reparte: "produccion" (socio que hizo el lote),
+  // "venta" (socio que registro la venta), "fondo" (reinversion, no se
+  // reparte a socios) u "otro" (solo informativo).
+  base: text("base").notNull().default("otro"),
   porcentaje: numeric("porcentaje", { precision: 5, scale: 2 }).notNull().default("0"),
   activo: boolean("activo").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/**
+ * Gasto libre del negocio (promocionales, marketing, pagina web, gorras,
+ * etc.). `tipo` = "produccion" (cuesta producir: gas, luz, agua...) |
+ * "variable" (promo, eventos, marketing, web). `concepto` es texto libre.
+ */
+export const gastos = pgTable("gastos", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  tipo: text("tipo").notNull().default("variable"),
+  concepto: text("concepto").notNull(),
+  monto: numeric("monto", { precision: 10, scale: 2 }).notNull(),
+  fecha: date("fecha").notNull(),
+  notas: text("notas"),
+  responsableId: uuid("responsable_id").references(() => socios.id),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

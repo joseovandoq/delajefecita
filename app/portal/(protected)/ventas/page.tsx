@@ -225,6 +225,7 @@ export default async function VentasPage() {
                 <TableHead>Cantidad</TableHead>
                 <TableHead>Precio unitario</TableHead>
                 <TableHead>Total</TableHead>
+                <TableHead>Pago</TableHead>
                 <TableHead>Responsable</TableHead>
               </TableRow>
             </TableHeader>
@@ -249,6 +250,7 @@ export default async function VentasPage() {
                   <TableCell>
                     {formatoMoneda(Number(v.cantidad) * Number(v.precioUnitario))}
                   </TableCell>
+                  <TableCell className="capitalize">{v.metodoPago ?? "—"}</TableCell>
                   <TableCell>{v.responsable?.nombre ?? "—"}</TableCell>
                 </TableRow>
               ))}

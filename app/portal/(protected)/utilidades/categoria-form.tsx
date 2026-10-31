@@ -16,7 +16,7 @@ export function CategoriaForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4 rounded-lg border p-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="nombre">Categoría</Label>
           <Input
@@ -25,6 +25,20 @@ export function CategoriaForm() {
             placeholder="Ej. Producción, Venta, Reinversión…"
             required
           />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="base">Se reparte a…</Label>
+          <select
+            id="base"
+            name="base"
+            defaultValue="otro"
+            className="h-9 rounded-md border bg-background px-3 text-sm"
+          >
+            <option value="produccion">Quien produjo</option>
+            <option value="venta">Quien vendió</option>
+            <option value="fondo">Fondo de inversión</option>
+            <option value="otro">Otro (solo informativo)</option>
+          </select>
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="porcentaje">Porcentaje</Label>

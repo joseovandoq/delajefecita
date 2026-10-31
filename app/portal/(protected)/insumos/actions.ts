@@ -6,17 +6,19 @@ import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { requireSocio } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { insumos, movimientosInsumo } from "@/lib/db/schema";
+import { insumos, movimientosInsumo, proveedores, ubicaciones } from "@/lib/db/schema";
 import { UNIDAD_INSUMO_VALUES, TIPO_EMPAQUE_VALUES } from "@/lib/constants";
 
 const insumoSchema = z.object({
   nombre: z.string().min(1, "Falta el nombre"),
-  categoria: z.enum(["ingrediente", "empaque"]),
+  categoria: z.enum(["ingrediente", "empaque", "promocional"]),
   tipoEmpaque: z.enum(TIPO_EMPAQUE_VALUES).optional().or(z.literal("")),
   unidad: z.enum(UNIDAD_INSUMO_VALUES),
   costoUnitario: z.coerce.number().nonnegative().optional(),
   proveedorId: z.string().uuid().optional().or(z.literal("")),
   ubicacionId: z.string().uuid().optional().or(z.literal("")),
+  proveedorNuevo: z.string().trim().optional(),
+  ubicacionNueva: z.string().trim().optional(),
   stockActual: z.coerce.number().nonnegative().default(0),
   stockMinimo: z.coerce.number().nonnegative().optional(),
   notas: z.string().optional(),
@@ -31,6 +33,8 @@ function parseInsumoFormData(formData: FormData) {
     costoUnitario: formData.get("costoUnitario") || undefined,
     proveedorId: formData.get("proveedorId") || "",
     ubicacionId: formData.get("ubicacionId") || "",
+    proveedorNuevo: formData.get("proveedorNuevo") || "",
+    ubicacionNueva: formData.get("ubicacionNueva") || "",
     stockActual: formData.get("stockActual") || 0,
     stockMinimo: formData.get("stockMinimo") || undefined,
     notas: formData.get("notas") || "",
@@ -38,6 +42,42 @@ function parseInsumoFormData(formData: FormData) {
 }
 
 type ActionResult = { error?: string } | undefined;
+
+/**
+ * Si escribieron un proveedor/ubicacion nuevo, lo crea (o reutiliza uno
+ * existente con el mismo nombre, sin importar mayusculas) y devuelve su id.
+ */
+async function resolverProveedorUbicacion(data: {
+  proveedorId?: string;
+  ubicacionId?: string;
+  proveedorNuevo?: string;
+  ubicacionNueva?: string;
+}) {
+  let proveedorId = data.proveedorId || null;
+  let ubicacionId = data.ubicacionId || null;
+
+  if (data.proveedorNuevo) {
+    const [existente] = await db
+      .select({ id: proveedores.id })
+      .from(proveedores)
+      .where(sql`lower(${proveedores.nombre}) = lower(${data.proveedorNuevo})`)
+      .limit(1);
+    proveedorId =
+      existente?.id ??
+      (await db.insert(proveedores).values({ nombre: data.proveedorNuevo }).returning({ id: proveedores.id }))[0].id;
+  }
+  if (data.ubicacionNueva) {
+    const [existente] = await db
+      .select({ id: ubicaciones.id })
+      .from(ubicaciones)
+      .where(sql`lower(${ubicaciones.nombre}) = lower(${data.ubicacionNueva})`)
+      .limit(1);
+    ubicacionId =
+      existente?.id ??
+      (await db.insert(ubicaciones).values({ nombre: data.ubicacionNueva }).returning({ id: ubicaciones.id }))[0].id;
+  }
+  return { proveedorId, ubicacionId };
+}
 
 export async function crearInsumo(
   _prevState: ActionResult,
@@ -51,6 +91,7 @@ export async function crearInsumo(
   }
 
   const data = parsed.data;
+  const { proveedorId, ubicacionId } = await resolverProveedorUbicacion(data);
 
   await db.insert(insumos).values({
     nombre: data.nombre,
@@ -58,8 +99,8 @@ export async function crearInsumo(
     tipoEmpaque: data.categoria === "empaque" ? data.tipoEmpaque || null : null,
     unidad: data.unidad,
     costoUnitario: data.costoUnitario?.toString() ?? null,
-    proveedorId: data.proveedorId || null,
-    ubicacionId: data.ubicacionId || null,
+    proveedorId,
+    ubicacionId,
     stockActual: data.stockActual.toString(),
     stockMinimo: data.stockMinimo?.toString() ?? null,
     notas: data.notas || null,
@@ -82,6 +123,7 @@ export async function actualizarInsumo(
   }
 
   const data = parsed.data;
+  const { proveedorId, ubicacionId } = await resolverProveedorUbicacion(data);
 
   await db
     .update(insumos)
@@ -91,8 +133,8 @@ export async function actualizarInsumo(
       tipoEmpaque: data.categoria === "empaque" ? data.tipoEmpaque || null : null,
       unidad: data.unidad,
       costoUnitario: data.costoUnitario?.toString() ?? null,
-      proveedorId: data.proveedorId || null,
-      ubicacionId: data.ubicacionId || null,
+      proveedorId,
+      ubicacionId,
       stockMinimo: data.stockMinimo?.toString() ?? null,
       notas: data.notas || null,
       updatedAt: new Date(),

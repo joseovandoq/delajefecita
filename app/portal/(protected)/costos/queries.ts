@@ -39,6 +39,8 @@ export async function listarProductosConPrecio() {
       id: productos.id,
       nombre: productos.nombre,
       precioVenta: productos.precioVenta,
+      precioMayoreo: productos.precioMayoreo,
+      mayoreoDesde: productos.mayoreoDesde,
     })
     .from(productos)
     .where(eq(productos.activo, true))

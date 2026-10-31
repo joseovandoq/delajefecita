@@ -45,7 +45,11 @@ port 6543) — see `.env.example`.
 - **Database**: Drizzle ORM against Postgres (Supabase). Schema is the single
   source of truth in `lib/db/schema.ts`; run `db:push` (dev) or
   `db:generate` (versioned migration, output in `drizzle/`) after editing it.
-  `lib/db/index.ts` exports the `db` client.
+  `lib/db/index.ts` exports the `db` client (kept in `globalThis` in dev so
+  hot reloads don't leak pools). Don't fire more than ~5 queries at once with
+  `Promise.all`: beyond the pool size they hang against the Supabase pooler.
+  `db:push` currently crashes in drizzle-kit (CHECK-constraint introspection);
+  apply additive schema changes with idempotent SQL instead.
 - **Module pattern**: each business module lives under
   `app/portal/(protected)/<modulo>/` and follows the layout used by `lotes/`
   (the only fully implemented module — use it as the reference):

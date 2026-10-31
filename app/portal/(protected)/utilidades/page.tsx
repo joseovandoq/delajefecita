@@ -52,15 +52,15 @@ export default async function UtilidadesPage() {
             </p>
           </div>
           <div className="rounded-lg border p-4">
-            <p className="text-sm text-muted-foreground">Costos fijos</p>
+            <p className="text-sm text-muted-foreground">Costos fijos y de producción</p>
             <p className="text-xl font-semibold">
-              -{formatoMoneda(resumen.costosFijosTotal)}
+              -{formatoMoneda(resumen.costosFijosTotal + resumen.gastosProduccion)}
             </p>
           </div>
           <div className="rounded-lg border p-4">
-            <p className="text-sm text-muted-foreground">Costos de eventos</p>
+            <p className="text-sm text-muted-foreground">Eventos y gastos variables</p>
             <p className="text-xl font-semibold">
-              -{formatoMoneda(resumen.costosEventosTotal)}
+              -{formatoMoneda(resumen.gastosVariablesTotal)}
             </p>
           </div>
           <div className="rounded-lg border p-4 bg-muted/40">
@@ -105,6 +105,7 @@ export default async function UtilidadesPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Categoría</TableHead>
+                <TableHead>Se reparte a</TableHead>
                 <TableHead>Porcentaje</TableHead>
                 <TableHead>Monto</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
@@ -115,6 +116,9 @@ export default async function UtilidadesPage() {
                 <TableRow key={c.id}>
                   <TableCell className="font-medium">
                     {c.nombre} {!c.activo && <Badge variant="outline">Inactiva</Badge>}
+                  </TableCell>
+                  <TableCell>
+                    {{ produccion: "Quien produjo", venta: "Quien vendió", fondo: "Fondo de inversión", otro: "Otro" }[c.base] ?? c.base}
                   </TableCell>
                   <TableCell>
                     <PorcentajeForm categoriaId={c.id} porcentaje={c.porcentaje} />

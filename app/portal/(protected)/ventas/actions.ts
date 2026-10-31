@@ -169,6 +169,7 @@ const ventaSchema = z.object({
   clienteId: z.string().uuid().optional().or(z.literal("")),
   cantidad: z.coerce.number().positive("La cantidad debe ser mayor a 0"),
   precioUnitario: z.coerce.number().positive("El precio debe ser mayor a 0"),
+  metodoPago: z.enum(["efectivo", "transferencia", "terminal"]).optional().or(z.literal("")),
   fecha: z.string().min(1, "Falta la fecha"),
   notas: z.string().optional(),
 });
@@ -185,6 +186,7 @@ export async function registrarVenta(
     clienteId: formData.get("clienteId") || "",
     cantidad: formData.get("cantidad"),
     precioUnitario: formData.get("precioUnitario"),
+    metodoPago: formData.get("metodoPago") || "",
     fecha: formData.get("fecha"),
     notas: formData.get("notas") || "",
   });
@@ -193,8 +195,17 @@ export async function registrarVenta(
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { loteId, puntoVentaId, eventoId, clienteId, cantidad, precioUnitario, fecha, notas } =
-    parsed.data;
+  const {
+    loteId,
+    puntoVentaId,
+    eventoId,
+    clienteId,
+    cantidad,
+    precioUnitario,
+    metodoPago,
+    fecha,
+    notas,
+  } = parsed.data;
 
   const [puntoVenta] = await db
     .select({ tipo: puntosVenta.tipo })
@@ -238,6 +249,7 @@ export async function registrarVenta(
       clienteId: clienteId || null,
       cantidad: cantidad.toString(),
       precioUnitario: precioUnitario.toString(),
+      metodoPago: metodoPago || null,
       fecha,
       notas: notas || null,
       responsableId: socio.id,
@@ -257,4 +269,5 @@ export async function registrarVenta(
   revalidatePath("/portal/ventas");
   revalidatePath("/portal/lotes");
   revalidatePath("/portal/eventos");
+  revalidatePath("/portal/resumen");
 }

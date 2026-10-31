@@ -66,7 +66,12 @@ export default async function CostosPage() {
                 <TableRow key={p.id}>
                   <TableCell className="font-medium">{p.nombre}</TableCell>
                   <TableCell>
-                    <PrecioVentaForm productoId={p.id} precioVenta={p.precioVenta} />
+                    <PrecioVentaForm
+                      productoId={p.id}
+                      precioVenta={p.precioVenta}
+                      precioMayoreo={p.precioMayoreo}
+                      mayoreoDesde={p.mayoreoDesde}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

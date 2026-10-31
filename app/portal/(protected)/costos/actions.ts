@@ -55,12 +55,16 @@ export async function borrarCostoFijo(id: string) {
 
 const precioVentaSchema = z.object({
   precioVenta: z.coerce.number().nonnegative().optional(),
+  precioMayoreo: z.coerce.number().nonnegative().optional(),
+  mayoreoDesde: z.coerce.number().int().min(2).default(2),
 });
 
 export async function actualizarPrecioVenta(productoId: string, formData: FormData) {
   await requireSocio();
   const parsed = precioVentaSchema.safeParse({
     precioVenta: formData.get("precioVenta") || undefined,
+    precioMayoreo: formData.get("precioMayoreo") || undefined,
+    mayoreoDesde: formData.get("mayoreoDesde") || 2,
   });
 
   if (!parsed.success) {
@@ -69,7 +73,11 @@ export async function actualizarPrecioVenta(productoId: string, formData: FormDa
 
   await db
     .update(productos)
-    .set({ precioVenta: parsed.data.precioVenta?.toString() ?? null })
+    .set({
+      precioVenta: parsed.data.precioVenta?.toString() ?? null,
+      precioMayoreo: parsed.data.precioMayoreo?.toString() ?? null,
+      mayoreoDesde: parsed.data.mayoreoDesde,
+    })
     .where(eq(productos.id, productoId));
 
   revalidatePath("/portal/costos");
