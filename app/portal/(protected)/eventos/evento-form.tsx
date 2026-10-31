@@ -22,7 +22,7 @@ export function EventoForm({ hoy }: { hoy: string }) {
         <Input id="nombre" name="nombre" placeholder="Ej. Bazar navideño" required />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="fecha">Fecha</Label>
           <Input id="fecha" name="fecha" type="date" defaultValue={hoy} required />

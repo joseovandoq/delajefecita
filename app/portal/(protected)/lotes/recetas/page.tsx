@@ -33,7 +33,7 @@ export default async function RecetasPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Recetas</h1>
           <p className="text-muted-foreground">

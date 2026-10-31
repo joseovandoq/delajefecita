@@ -79,7 +79,7 @@ export default async function UtilidadesPage() {
       </div>
 
       <div>
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <h2 className="text-xl font-semibold">Categorías de reparto</h2>
           {categoriasActivas.length > 0 && (
             <p className="text-sm text-muted-foreground">

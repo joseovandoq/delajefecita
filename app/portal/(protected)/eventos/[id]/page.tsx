@@ -39,7 +39,7 @@ export default async function DetalleEventoPage({
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">{evento.nombre}</h1>
           <p className="text-muted-foreground">
@@ -53,7 +53,7 @@ export default async function DetalleEventoPage({
       </div>
 
       <div>
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <h2 className="text-xl font-semibold">Costos</h2>
           <p className="text-sm text-muted-foreground">
             Total: <strong>{formatoMoneda(total)}</strong>

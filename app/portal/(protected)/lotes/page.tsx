@@ -20,7 +20,7 @@ export default async function LotesPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Lotes de producción</h1>
           <p className="text-muted-foreground">

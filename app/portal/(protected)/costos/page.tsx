@@ -141,7 +141,7 @@ export default async function CostosPage() {
       </div>
 
       <div>
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <h2 className="text-xl font-semibold">Costos fijos del negocio</h2>
           <p className="text-sm text-muted-foreground">
             Total registrado: <strong>{formatoMoneda(totalCostosFijos)}</strong>

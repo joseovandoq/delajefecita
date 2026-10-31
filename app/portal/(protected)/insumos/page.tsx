@@ -24,7 +24,7 @@ export default async function InsumosPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Insumos</h1>
           <p className="text-muted-foreground">

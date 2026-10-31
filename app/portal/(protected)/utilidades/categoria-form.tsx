@@ -16,7 +16,7 @@ export function CategoriaForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4 rounded-lg border p-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="flex flex-col gap-2">
           <Label htmlFor="nombre">Categoría</Label>
           <Input

@@ -206,7 +206,7 @@ export default async function VentasPage() {
       )}
 
       <div>
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <h2 className="text-xl font-semibold">Historial de ventas</h2>
           <p className="text-sm text-muted-foreground">
             Total: <strong>{formatoMoneda(totalVentas)}</strong>
